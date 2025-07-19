@@ -1,0 +1,11 @@
+# 新建 openssl.cnf 或基础镜像已有配置的覆盖版
+openssl_conf = default_conf
+
+[default_conf]
+ssl_conf = ssl_sect
+
+[ssl_sect]
+system_default = ssl_default_sect
+
+[ssl_default_sect]
+Options = IgnoreUnexpectedEOF
