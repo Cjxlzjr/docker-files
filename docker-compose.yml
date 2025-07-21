@@ -118,8 +118,8 @@ services:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
     volumes:
       - spark_volume:/spark
-      - ./conf/hive-conf/hive-site.xml:/spark/conf/hive-site.xml  # 挂载到spark配置目录
-      - ./conf/hive-conf/hive-site.xml:/opt/hive/conf/hive-site.xml  # 同时挂载到hive配置目录
+      - ./conf/hive-conf/:/spark/conf/  # 挂载到spark配置目录
+      - ./conf/hive-conf/:/opt/hive/conf/  # 同时挂载到hive配置目录
     command: [
       "/spark/bin/spark-submit",
       "--class", "org.apache.spark.sql.hive.thriftserver.HiveThriftServer2",
@@ -161,16 +161,19 @@ services:
     container_name: zeppelin
     depends_on:
       - spark-master
+      - hive-server
     ports:
       - "8090:8080"
     volumes:
       - ./volume/zeppelin/notebook:/opt/zeppelin/notebook
       - ./zeppelin/conf:/opt/zeppelin/conf
       - spark_volume:/opt/zeppelin/spark
+      - ./zeppelin/hadoop:/opt/zeppelin/.m2/repository
+      - ./zeppelin/notebooks:/opt/zeppelin/notebook
     environment:
       - "SPARK_HOME=/opt/zeppelin/spark"
       - "SPARK_MASTER=spark://spark-master:7077"
-      
+
       
 #Hive
 
@@ -187,7 +190,6 @@ services:
       SERVICE_PRECONDITION: "hive-metastore:9083"
       HIVE_CUSTOM_CONF_DIR: /opt/hive/conf-custom
     volumes:
-      - ./conf/hive-conf/hive-site.xml:/opt/hive/conf-custom/hive-site.xml
       - ./conf/hive-conf/hive-site.xml:/opt/hive/conf/hive-site.xml
       - ./spark/jars:/opt/hive/lib/spark-jars
     ports:
@@ -239,7 +241,7 @@ services:
       - "8888:8888"
     volumes:
       - ./conf/hue/z-hue.ini:/usr/share/hue/desktop/conf/z-hue.ini
-      - ./conf/hue/log.conf:/usr/share/hue/desktop/conf/log.conf
+      - ./conf/hue/:/usr/share/hue/desktop/conf/
       - ./conf/hive-conf/:/etc/hive/conf/
     depends_on:
     - database
@@ -268,7 +270,7 @@ services:
   superset-init:
     image: *superset-image
     container_name: superset_init
-    command: ["/app/docker/docker-init.sh"]
+    command: ["./docker/docker-init.sh"]
     env_file: docker/.env-non-dev
     depends_on:
       - db
@@ -285,7 +287,7 @@ services:
     env_file: docker/.env-non-dev
     image: *superset-image
     container_name: superset_app
-    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+    command: ["./docker/docker-bootstrap.sh", "app-gunicorn"]
     user: "root"
     restart: unless-stopped
     ports:

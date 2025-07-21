@@ -7,7 +7,7 @@
       "properties": {
         "default.url": {
           "name": "default.url",
-          "value": "jdbc:hive2://localhost:10000/",
+          "value": "jdbc:hive2://hive-server:10000/default",
           "type": "string",
           "description": "The URL for JDBC."
         },
@@ -126,8 +126,7 @@
           "description": "Query interval for hive statement"
         }
       },
-      "status": "ERROR",
-      "errorReason": "Cannot fetch dependencies for org.apache.hadoop:hadoop-common:2.6.0",
+      "status": "READY",
       "interpreterGroup": [
         {
           "name": "sql",
@@ -143,16 +142,17 @@
       "dependencies": [
         {
           "groupArtifactVersion": "org.apache.hive:hive-jdbc:0.14.0",
-          "local": false
-        },
-        {
-          "groupArtifactVersion": "org.apache.hadoop:hadoop-common:2.6.0",
           "local": false,
           "exclusions": []
+        },
+        {
+          "groupArtifactVersion": "/opt/zeppelin/.m2/repository/hadoop-common-2.6.0.jar",
+          "local": false
         }
       ],
       "option": {
         "remote": true,
+        "host": "",
         "port": -1,
         "perNote": "shared",
         "perUser": "shared",
@@ -3296,6 +3296,47 @@
         "enabled": true,
         "updatePolicy": "daily",
         "checksumPolicy": "warn"
+      },
+      "mirroredRepositories": [],
+      "repositoryManager": false
+    },
+    {
+      "id": "Centrals",
+      "type": "default",
+      "url": "http://insecure.repo1.maven.org/maven2/",
+      "host": "insecure.repo1.maven.org",
+      "protocol": "http",
+      "releasePolicy": {
+        "enabled": true,
+        "updatePolicy": "daily",
+        "checksumPolicy": "warn"
+      },
+      "snapshotPolicy": {
+        "enabled": true,
+        "updatePolicy": "daily",
+        "checksumPolicy": "warn"
+      },
+      "authentication": {
+        "type": "org.eclipse.aether.util.repository.ChainedAuthentication",
+        "data": {
+          "authentications": [
+            {
+              "type": "org.eclipse.aether.util.repository.StringAuthentication",
+              "data": {
+                "key": "username",
+                "value": ""
+              }
+            },
+            {
+              "type": "org.eclipse.aether.util.repository.SecretAuthentication",
+              "data": {
+                "key": "password",
+                "value": [],
+                "secretHash": 1060933865
+              }
+            }
+          ]
+        }
       },
       "mirroredRepositories": [],
       "repositoryManager": false

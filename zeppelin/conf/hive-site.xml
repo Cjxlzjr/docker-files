@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <property>
+    <name>hive.execution.engine</name>
+    <value>spark</value>
+  </property>
+  
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://hive-metastore:9083</value>
+  </property>
+
+  <!-- HiveServer2 配置 -->
+  <property>
+    <name>hive.server2.thrift.port</name>
+    <value>10000</value>
+  </property>
+  
+  <property>
+    <name>hive.server2.thrift.bind.host</name>
+    <value>0.0.0.0</value>
+  </property>
+
+  <!-- Spark 配置 -->
+  <property>
+    <name>spark.master</name>
+    <value>local[*]</value>
+  </property>
+  
+  <property>
+    <name>spark.app.name</name>
+    <value>HiveServer2</value>
+  </property>
+
+  <property>
+    <name>spark.driver.extraClassPath</name>
+    <value>/opt/hive/lib/spark-jars/*</value>
+  </property>
+  
+  <property>
+    <name>spark.executor.extraClassPath</name>
+    <value>/opt/hive/lib/spark-jars/*</value>
+  </property>
+
+  <!-- 确保 Hive 可以找到 Spark -->
+  <property>
+    <name>spark.sql.hive.metastore.version</name>
+    <value>2.3.9</value>
+  </property>
+
+</configuration>
